@@ -3,6 +3,7 @@
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.corpus import stopwords
 
 # Generación de diccionario
 
@@ -32,9 +33,8 @@ for word in bagOfWordsB:
 print(numOfWordsA)
 print(numOfWordsB)
 
-from nltk.corpus import stopwords
-
 stopwords.words('spanish')
+
 
 # TERM FRECUENCY (TF)
 
@@ -51,9 +51,11 @@ def computeTF(wordDict, bagOfWords):
         tfDict[word] = count / float(bagOfWordsCount)
     return tfDict
 
+
 # Intervalos inferiores para los datas
 tfA = computeTF(numOfWordsA, bagOfWordsA)
 tfB = computeTF(numOfWordsB, bagOfWordsB)
+
 
 # INVERSE DATA FRECUENCY (IDF)
 
@@ -72,3 +74,40 @@ def computeIDF(documents):
     for word, val in idfDict.items():
         idfDict[word] = math.log(N / float(val))
     return idfDict
+
+
+# IDF para todos los documento
+idfs = computeIDF([numOfWordsA, numOfWordsB])
+
+
+# TF IDF
+
+def computeTFIDF(tfBagOfWords, idfs):
+    tfidf = {}
+    for word, val in tfBagOfWords.items():
+        tfidf[word] = val * idfs[word]
+    return tfidf
+
+
+# Aplicamos a Bases A y B
+tfidfA = computeTFIDF(tfA, idfs)
+tfidfB = computeTFIDF(tfB, idfs)
+
+# Generación de matriz
+df = pd.DataFrame([tfidfA, tfidfB])
+print(df)
+
+# MODELO TF IDF 'Suavizado' (incluye todas las palabras sin stopwords)
+
+vectorizer = TfidfVectorizer()
+
+vectors = vectorizer.fit_transform([text_1, text_2])
+
+feature_names = vectorizer.get_feature_names()
+
+dense = vectors.todense()
+
+denselist = dense.tolist()
+
+df = pd.DataFrame(denselist, columns=feature_names)
+print(df)
