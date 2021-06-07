@@ -8,7 +8,7 @@ from nltk.corpus import stopwords
 # Generación de diccionario
 
 # Cargamos la data a modelar
-text_1 = "El hombre fue a caminar"
+text_1 = "El hombre fue a caminar"                  # Pasarlo como en R Data$Columna[n]
 text_2 = "Los niños se sentaron sobre el cesped"
 
 # Vectorizamos las palabras, separando por espacio
