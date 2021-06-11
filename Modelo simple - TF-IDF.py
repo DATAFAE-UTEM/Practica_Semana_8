@@ -17,41 +17,10 @@ doc_2 = "REF. DA CURSO A ANOTACION EN EL  REGISTRO ESPECIAL DE ENTIDADES  INFORM
 print(doc_2)
 
 
-# Limpieza texto
-def clean_text(text):
-    # Se transforma el texto en minúscula
-    nuevo_texto = text.lower()
-    # Eliminación de páginas web (palabras que empiezan por "http")
-    nuevo_texto = re.sub('http\S+', ' ', nuevo_texto)
-    # Eliminación de signos de puntuación
-    regex = '[\\n°\\n\\!\\,\\"\\#\\$\\%\\&\\\'\\(\\)\\*\\+\\-\\\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^_\\`\\{\\|\\}\\~\\”\\“]'  # se descarta .
-    nuevo_texto = re.sub(regex, ' ', nuevo_texto)
-    # Eliminación de números
-    nuevo_texto = re.sub("\d+", ' ', nuevo_texto)
-    # Eliminación de espacios en blanco multiples
-    nuevo_texto = re.sub("\\s+", ' ', nuevo_texto)
-
-    # Tokenizamos en Español
-    stop_words = set(stopwords.words('spanish'))
-    tokens = sent_tokenize(nuevo_texto)
-    print(tokens)
-
-    # Aplicamos una funcion para encontrar elementos que no estén en puntuación
-    tokens_clean = list(filter(lambda token: token not in string.punctuation, tokens))
-    filtro = []
-
-    # Ciclo para revisar las palabras que no están en las stopwords
-    for palabra in tokens_clean:
-        if palabra not in stop_words:
-            filtro.append(palabra)
-
-text_1 = clean_text(doc_1)
-text_2 = clean_text(doc_2)
-
 # BAG OF WORDS
 # Vectorizamos las palabras, separando por espacio
-bagOfWordsA = text_1.split(' ')
-bagOfWordsB = text_2.split(' ')
+bagOfWordsA = doc_1.split(' ')
+bagOfWordsB = doc_2.split(' ')
 
 # Definir las palabras únicas
 uniqueWords = set(bagOfWordsA).union(set(bagOfWordsB))
@@ -139,7 +108,7 @@ print(df)
 
 vectorizer = TfidfVectorizer()
 
-vectors = vectorizer.fit_transform([text_1, text_2])
+vectors = vectorizer.fit_transform([doc_1, doc_2])
 
 feature_names = vectorizer.get_feature_names()
 
